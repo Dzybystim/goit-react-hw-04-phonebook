@@ -1,64 +1,65 @@
-import React, { Component } from "react";
-import PropTypes from 'prop-types';
+import React, { useState  } from "react";
 import {Form, ButtonSubmit} from './PhonebookInput.styled'
 
-export default class PhonebookInput extends Component  {
-state = {
-  name: '',
-  number: ''
-}
+export default function PhonebookInput({titleName, titleNumber, addContacts, checkAlreadyEnteredValue})  {
+let [name, setName] = useState('')
+let [number, setNumber] = useState('')
+
 
 
 ////////////////////Функция обновляет до начального состояния инпуты ввода
-reset = () => {
-  this.setState({
-    name: '',
-    number: ''
-  })
+const reset = () => {
+  setName(name='')
+  setNumber(number='')
 }
 ///////////////////Функция которая обрабатывает событие Сабмита
-handleSubmit = event => {
+const handleSubmit = event => {
   event.preventDefault();
 
-  const check = this.props.checkAlreadyEnteredValue(this.state.name)
+  const check = checkAlreadyEnteredValue(name)
   if(check) {
-  return alert(`${this.state.name} is already in contacts`)}
+  return alert(`${name} is already in contacts`)}
   else {
-  this.props.addContacts(this.state.name, this.state.number)
-  this.reset()
+  addContacts(name, number)
+  reset()
   }
 }
 ///////////////////Функция которая записывает в стейт данные введенные в инпуты
-handleInputChange = event => {
-  this.setState({
-    [event.currentTarget.name]: event.currentTarget.value
-  })
+const handleInputChange = event => {
+  switch(event.target.name) {
+    case 'name':
+      setName(event.target.value);
+      break;
+    case 'number':
+      setNumber(event.target.value)
+      break;
+    default: console.log('Ошибка в handleInputChange')
+  }
 }
 
 
-render() {
     return <div>
-        <Form onSubmit={this.handleSubmit}>
-        <h2>{this.props.titleName}</h2>
+        <Form onSubmit={handleSubmit}>
+        <h2>{titleName}</h2>
         <label>
         <input
           type="text"
           name="name"
-          value={this.state.name}
-          onChange={this.handleInputChange}
+          value={name}
+          onChange={handleInputChange}
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. 
           For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           />
           </label>
-          <h2>{this.props.titleNumber}</h2>
+          <h2>{titleNumber}</h2>
           <label>
           <input
             type="tel"
             name="number"
-            value={this.state.number}
-            onChange={this.handleInputChange}
+            value={number}
+            onChange={handleInputChange}
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
@@ -68,11 +69,5 @@ render() {
           </Form>
     </div>
 }
-}
 
-PhonebookInput.propTypes = {
-  titleName: PropTypes.string.isRequired,
-  titleNumber: PropTypes.string.isRequired,
-  addContacts: PropTypes.func.isRequired,
-  checkAlreadyEnteredValue: PropTypes.func.isRequired
-}
+
