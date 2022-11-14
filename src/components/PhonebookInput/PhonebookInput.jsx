@@ -1,4 +1,5 @@
 import React, { useState  } from "react";
+import PropTypes from 'prop-types';
 import {Form, ButtonSubmit} from './PhonebookInput.styled'
 
 export default function PhonebookInput({titleName, titleNumber, addContacts, checkAlreadyEnteredValue})  {
@@ -70,4 +71,9 @@ const handleInputChange = event => {
     </div>
 }
 
-
+PhonebookInput.propTypes = {
+  titleName: PropTypes.string.isRequired,
+  titleNumber: PropTypes.string.isRequired,
+  addContacts: PropTypes.func.isRequired,
+  checkAlreadyEnteredValue: PropTypes.func.isRequired
+}
